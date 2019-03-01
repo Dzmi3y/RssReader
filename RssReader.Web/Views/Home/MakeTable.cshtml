@@ -1,0 +1,78 @@
+﻿@using RssReader.DataAccessLayer.Interfaces;
+@using RssReader.Web.Models;
+@model MakeTableViewModel
+
+<div>
+    <div>
+        <table border="1" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Источник</th>
+                    <th>Название<br /> новости</th>
+                    <th>Описание<br /> новости</th>
+                    <th>Дата<br /> публикации</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (IPublication item in Model.Publications)
+                {
+                    <tr>
+                        <td>@item.Source</td>
+                        <td>@item.Title <br /> <a href="@item.Link" target="_blank">@item.Link</a> </td>
+                        <td>@item.Description</td>
+                        <td>@item.PublicationDate</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div id="PublicationTable">
+
+    </div>
+
+    <div id="pagination">
+        <input type="hidden" id="paginationSelectSource" value="@Model.SelectSource">
+        <input type="hidden" id="paginationKindOfSorting" value="@Model.KindOfSorting">
+        <input type="hidden" id="paginationTotalPages" value="@Model.PageInfo.TotalPages">
+        <input type="hidden" id="paginationPageNumber" value="@Model.PageInfo.PageNumber">
+        
+        <table id="paginationTable">
+            <tr id="paginationTableTr"></tr>
+        </table>
+
+
+        <script type="text/javascript">
+            var SelectSource = $('#paginationSelectSource').val();
+            var KindOfSorting = $('#paginationKindOfSorting').val();
+            var TotalPages = $('#paginationTotalPages').val();
+            var PageNumber = $('#paginationPageNumber').val();
+
+
+
+            for (let i = 1; i <= TotalPages; i++) {
+                if (i != PageNumber) {
+
+                    $('#paginationTableTr').append('<td id="paginationCell' + i + '"></td>');
+                    $('#paginationCell' + i).append('<button id="paginationButton' + i + '" >' + i + '</button>');
+
+
+                    $('#paginationButton' + i).bind("click", function () {
+
+
+                        lol(SelectSource, KindOfSorting, i);
+                    });
+                }
+                else
+                {
+                    $('#paginationTableTr').append('<td id="paginationCell' + i + '"></td>');
+                    $('#paginationCell' + i).append('<h3>' + i + '</h3>');
+                }
+            }
+
+
+        </script>
+    </div>
+</div>
+
+@Scripts.Render("~/Scripts/jquery-3.3.1.min.js")
+@Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.js")

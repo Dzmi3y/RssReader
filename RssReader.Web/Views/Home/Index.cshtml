@@ -1,0 +1,64 @@
+﻿@model List<string>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>RssReader</title>
+</head>
+
+<body>
+    <h3>Новостная лента</h3>
+    @using (Ajax.BeginForm("MakeTable", new AjaxOptions { UpdateTargetId = "NewsTable", HttpMethod = "Post" }))
+    {
+
+        <div>
+            Источник ленты
+            <select name="selectSource">
+                <option selected value="All">Все</option>
+                @foreach (string itemUrl in Model)
+                {
+                    <option value="@itemUrl">@itemUrl</option>
+                }
+            </select>
+        </div>
+
+        <table>
+            <tr>
+                <td valign="top">
+                    <input type="radio" name="kindOfSorting" checked value="byDate" />
+                </td>
+                <td>
+                    Сортировать<br /> по дате
+                </td>
+                <td valign="top">
+                    <input type="radio" name="kindOfSorting" value="bySource" />
+                </td>
+                <td>
+                    Сортировать<br /> по источнику
+                </td>
+            </tr>
+        </table>
+
+        <p>
+            <input type="submit" value="Просмотреть">
+        </p>
+    }
+
+
+    <div id="NewsTable">
+    </div>
+    <script type="text/javascript">
+        function lol(selectSource, kindOfSorting, currentPage) {
+            $('#NewsTable').load('@Url.Action("MakeTable", "Home")?selectSource=' + selectSource + '&kindOfSorting=' + kindOfSorting + '&currentPage=' + currentPage);
+        }
+    </script>
+
+
+    @Scripts.Render("~/Scripts/jquery-3.3.1.min.js")
+    @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.js")
+</body>
+</html>
